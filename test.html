@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Document</title>
+	</head>
+	<!--Some styling, pretty self-explainatory-->
+	<style>
+		body {
+			background-color: grey;
+		}
+
+		canvas {
+			background-color: white;
+			border: 1px solid;
+			margin-left: 2%;
+			margin-top: 1vh;
+		}
+
+		#wrapper {
+			float: right;
+			display: flex;
+			flex-direction: column;
+		}
+
+		button {
+			font-size: large;
+			margin: 6px;
+		}
+	</style>
+	<body>
+		<canvas id="myCanvas" width="1000" height="700"></canvas>
+		<!--Canvas tag-->
+		<div id="wrapper">
+			<button id="clear">clear</button>
+			<button id="draw-rectangle">draw rectangle</button>
+			<button id="animate-rectangle">animate rectangle</button>
+		</div>
+	</body>
+	<script>
+		//let's make a function that draws a rectangle on the canvas
+		function draw_rectangle_on_canvas(x_coordinate) {
+			//the function has one parameter, x_coordinate
+			const canvas = document.getElementById('myCanvas'); //grab the canvas element with javascript
+			const context = canvas.getContext('2d'); //this returns an object that will help us interact with the canvas in 2D
+
+			context.fillRect(x_coordinate, 20, 150, 100);
+			//draw a rectangle at the x coordinate passed as argument to the function
+			//https://www.w3schools.com/tags/canvas_fillrect.asp
+			//the context object has a method (or action) called fillRect that will draw a rectangle on the canvas
+			//a method is just a function, the only difference is that it belongs to an object, it's inside the object
+			//fillRect accepts 4 parameters, x and y coordinates of the rectangles' upper left corner, and the rectangles' width and height
+		}
+
+		function clearCanvas() {
+			const canvas = document.getElementById('myCanvas'); //grab the canvas element with javascript
+			const context = canvas.getContext('2d'); //this returns an object that will help us interact with the canvas in 2D
+
+			context.clearRect(0, 0, canvas.width, canvas.height);
+		}
+
+		function animate_rectangle_on_canvas() {
+			const canvas = document.getElementById('myCanvas'); //grab the canvas element with javascript
+			const context = canvas.getContext('2d'); //this returns an object that will help us interact with the canvas in 2D
+			let x_coordinate = 20;
+
+			//let's make a function that clears the canvas then repaints the rectangle in the updated position
+			//this function is being declared inside another function. It means it can't be accessed from outside, only from within the scope it was declared in
+			function animate() {
+				clearCanvas(); //it's the function we defined before. This will clear the canvas, so we can draw on the following frame
+				draw_rectangle_on_canvas(x_coordinate); //it's the function we defined before. We need to pass it the x coordinate, so it will know where to draw the rectangle
+				x_coordinate = x_coordinate + 5; //after each frame, update the x position by 5
+			}
+
+			//now, we use the javascript inbuilt function setInterval
+			//this takes two arguments: a function and a time interval
+			//so the function will be invoked every x miliseconds
+			setInterval(animate, 30);
+			//we passed the animate function from above, and 30 miliseconds
+			//so the animate function will be called every 30 miliseconds
+			//and the animate function, will clear the canvas, will draw the rectangle, then will increase the variable that holds the x coordinate value
+		}
+
+		//here we grab each button and attach the corresponding functions to it
+		document.getElementById('clear').onclick = clearCanvas;
+		document.getElementById('draw-rectangle').onclick = function () {
+			draw_rectangle_on_canvas(20);
+			//draw_rectangle_on_canvas needs an argument, the x_coordinate
+			//that's why we are writing it inside a function here
+			//don't think too much about it
+		};
+		document.getElementById('animate-rectangle').onclick = animate_rectangle_on_canvas;
+	</script>
+</html>
